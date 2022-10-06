@@ -1,0 +1,10 @@
+version: "0.1.0"
+services:
+  savrasca:
+    build: .
+    volumes: 
+      - savrasca:/home/root
+    command: /bin/zsh -c "while sleep 1000; do :; done"
+
+volumes:
+  savrasca:
