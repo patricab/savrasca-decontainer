@@ -3,7 +3,10 @@ services:
   savrasca:
     build: .
     volumes: 
-      - savrasca:/home/root
+      # - ../savrasca:/home/vscode/savrasca
+      - savrasca:/home/vscode
+      # - ../app:/home/vscode/app
+      - ~.ssh/:/home/vscode/.ssh
     command: /bin/zsh -c "while sleep 1000; do :; done"
 
 volumes:
