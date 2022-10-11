@@ -4,7 +4,7 @@
 # Default configs:
 # - OS: Arch Linux
 # - Package manager: pacman
-# - Shell: zsh
+# - Shell: bash
 
 FROM archlinux:latest
 ENV WORKDIR=/home/vscode
@@ -13,7 +13,7 @@ RUN pacman -Sy --noconfirm
 RUN pacman -S --needed --noconfirm zsh git sudo gcc automake libtool autoconf texinfo make avr-gcc avr-libc avrdude make python
 
 RUN useradd -m vscode -d ${WORKDIR}
-RUN chsh -s /bin/zsh vscode
+# RUN chsh -s /bin/zsh vscode
 RUN passwd -d vscode
 RUN printf "vscode ALL=(ALL) ALL" >> /etc/sudoers
 
@@ -26,6 +26,7 @@ git pull; \
 autoreconf --install && \
 ./configure && \
 make && make check && sudo make install
+WORKDIR ${WORKDIR}/app
 
 # [Optional] Uncomment this section to install additional OS packages.
 # RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \

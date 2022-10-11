@@ -1,0 +1,62 @@
+# Development container for the SAVRASCA tool
+# https://github.com/nikita-veshchikov/savrasca
+
+# Default configs:
+# - OS: Arch Linux
+# - Package manager: pacman
+# - Shell: bash
+
+FROM ubuntu:latest
+ENV WORKDIR=/home/vscode
+ARG DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get -y update && apt-get -y upgrade
+RUN apt-get -yq install build-essential gdb lcov pkg-config \
+libbz2-dev libffi-dev libgdbm-dev libgdbm-compat-dev liblzma-dev \
+libncurses5-dev libreadline6-dev libsqlite3-dev libssl-dev \
+lzma lzma-dev tk-dev uuid-dev zlib1g-dev curl git bash udev sudo
+
+SHELL ["/bin/bash", "-c"]
+RUN useradd -m vscode -d ${WORKDIR}
+RUN chsh -s /bin/bash vscode
+RUN passwd -d vscode
+RUN printf "vscode ALL=(ALL) ALL" >> /etc/sudoers
+
+USER vscode
+WORKDIR ${WORKDIR}
+
+RUN curl https://pyenv.run | bash
+RUN export PATH="~/.pyenv/bin:$PATH" && \
+export PATH="~/.pyenv/shims:$PATH" && \
+eval "$(pyenv init -)" && \
+eval "$(pyenv virtualenv-init -)" && \
+source ${WORKDIR}/.bashrc && \
+pyenv install 3.9.5 && \
+pyenv virtualenv 3.9.5 cw && \
+pyenv activate cw
+
+RUN git clone https://github.com/newaetech/chipwhisperer && \
+cd chipwhisperer && \
+# sudo cp hardware/50-newae.rules /etc/udev/rules.d/50-newae.rules && \
+# sudo udevadm control --reload-rules && \
+# sudo usermod -aG dialout $USER && \
+# sudo usermod -aG plugdev $USER && \
+git submodule update --init jupyter
+
+RUN export PATH="~/.pyenv/bin:$PATH" && \
+export PATH="~/.pyenv/shims:$PATH" && \
+python -m pip install -e . && \
+python -m pip install -r jupyter/requirements.txt
+
+# RUN git clone https://aur.archlinux.org/yay.git; cd yay; makepkg -si --noconfirm; cd ${WORKDIR}
+# RUN git clone https://github.com/patricab/savrasca
+# RUN cd savrasca/simulavr; \ 
+# git pull; \
+# autoreconf --install && \
+# ./configure && \
+# make && make check && sudo make install
+# WORKDIR ${WORKDIR}/app
+
+# [Optional] Uncomment this section to install additional OS packages.
+# RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
+#     && apt-get -y install --no-install-recommends <your-package-list-here>
