@@ -8,7 +8,7 @@ services:
     volumes: 
       - savrasca:/home/vscode
       - ./app:/home/vscode/app
-      - ~.ssh/:/home/vscode/.ssh
+      - ~/.ssh/:/home/vscode/.ssh
     command: /bin/bash -c "while sleep 1000; do :; done"
 
   chipwhisperer:
@@ -16,10 +16,14 @@ services:
     build: 
       context: .devcontainer-chipwhisperer/
       dockerfile: dockerfile-chipwhisperer
+    environment:
+      - DISPLAY=${DISPLAY}
+    network_mode: host
     volumes:
       - chipwhisperer:/home/vscode
+      - /tmp/.X11-unix:/tmp/.X11-unix
       - ./app:/home/vscode/app
-      - ~.ssh/:/home/vscode/.ssh
+      - ~/.ssh/:/home/vscode/.ssh
     command: /bin/bash -c "while sleep 1000; do :; done"
 
 volumes:
