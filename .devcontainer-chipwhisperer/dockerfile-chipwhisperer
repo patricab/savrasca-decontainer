@@ -51,8 +51,7 @@ pyenv activate cw && \
 python -m pip install -e . && \
 python -m pip install -r jupyter/requirements.txt
 
-COPY app/.bashrc ${WORKDIR}/.bashrc
-
+# COPY ../app/.bashrc ${WORKDIR}/.bashrc
 
 # [Optional] Uncomment this section to install additional OS packages.
 # RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
