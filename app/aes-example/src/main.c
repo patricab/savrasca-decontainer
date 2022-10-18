@@ -8,15 +8,17 @@
 #include <string.h>
 #include "aes.h"
 
+#define out (*( (volatile char *)0x20))
+#define in (*( (volatile char *)0x22))
+
 /* Functions */
-void print_hex(BYTE str[], int len)
-{
-	int idx;
+// void print_hex(BYTE str[], int len)
+// {
+// 	int idx;
 
-	for(idx = 0; idx < len; idx++)
-		printf("%02x", str[idx]);
-}
-
+// 	for(idx = 0; idx < len; idx++)
+// 		printf("%02x", str[idx]);
+// }
 
 int aes_cbc_test()
 {
@@ -68,8 +70,12 @@ int aes_cbc_test()
 
 int main(int argc, char *argv[])
 {
+	out = "Hello world";
 	int pass = 1 && aes_cbc_test();
-	printf("AES Tests: %s\n", pass ? "SUCCEEDED" : "FAILED");
+	// printf("AES Tests: %s\n", pass ? "SUCCEEDED" : "FAILED");
+	char *passStr = pass ? "SUCCEEDED" : "FAILED";
+	// printf("AES Tests: %s\n", pass ? "SUCCEEDED" : "FAILED");
+	// out = passStr;
 
 	return(0);
 }

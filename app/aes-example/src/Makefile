@@ -1,5 +1,5 @@
 NAME=aes
-ARCH=atmega
+ARCH=atmega328
 # ARCH=atmega16
 # MCU=atmega163
 

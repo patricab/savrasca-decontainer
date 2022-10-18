@@ -1,6 +1,7 @@
 #!/bin/bash
 NAME=aes
 SIMPATH=../../savrasca/simulavr/src/simulavr
+ARCH=atmega328
 
 # filename of the binary for the simulation
 file=src/$NAME.elf
@@ -32,9 +33,11 @@ fi
 
 
 # repeat simulation by calling python script
-for (( i=0; i<10; i++ ))
-do
-    python3 generateInputs.py $i | $SIMPATH -t traces_exe/trace_exe_`printf "%05d" $i` -P traces/trace`printf "%05d" $i` -d atmega16 -f $file -W 0x20,- -R 0x22,- -T exit
+# for (( i=0; i<10; i++ ))
+# do
+#     # python3 generateInputs.py $i | $SIMPATH -t traces_exe/trace_exe_`printf "%05d" $i` -P traces/trace`printf "%05d" $i` -d $ARCH -f $file -W 0x20,- -R 0x22,- -T exit
+#     $SIMPATH -t traces_exe/trace_exe_`printf "%05d" $i` -P traces/trace`printf "%05d" $i` -d $ARCH -f $file -W 0x20,- -R 0x22,- -T exit
     
-done;
+# done;
+$SIMPATH -d $ARCH -f $file -T exit
 
