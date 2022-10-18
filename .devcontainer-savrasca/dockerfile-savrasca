@@ -10,7 +10,7 @@ FROM archlinux:latest
 ENV WORKDIR=/home/vscode
 
 RUN pacman -Sy --noconfirm
-RUN pacman -S --needed --noconfirm zsh git sudo gcc automake libtool autoconf texinfo make avr-gcc avr-libc avrdude make python
+RUN pacman -S --needed --noconfirm zsh git sudo gcc automake libtool autoconf texinfo make avr-gcc avr-libc avrdude make python avr-gdb
 
 RUN useradd -m vscode -d ${WORKDIR}
 # RUN chsh -s /bin/zsh vscode

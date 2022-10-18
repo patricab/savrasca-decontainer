@@ -19,6 +19,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "aes.h"
+#include "print.h"
 
 #include <stdio.h>
 
@@ -237,6 +238,7 @@ int aes_encrypt_cbc(const BYTE in[], size_t in_len, BYTE out[], const WORD key[]
 	int blocks, idx;
 
 	if (in_len % AES_BLOCK_SIZE != 0)
+		print("\nError: bad input size");
 		return(FALSE);
 
 	blocks = in_len / AES_BLOCK_SIZE;
@@ -1071,7 +1073,7 @@ void aes_decrypt(const BYTE in[], BYTE out[], const WORD key[], int keysize)
 /*******************
 ** AES DEBUGGING FUNCTIONS
 *******************/
-/*
+// /*
 // This prints the "state" grid as a linear hex string.
 void print_state(BYTE state[][4])
 {
@@ -1079,8 +1081,8 @@ void print_state(BYTE state[][4])
 
 	for (idx=0; idx < 4; idx++)
 		for (idx2=0; idx2 < 4; idx2++)
-			printf("%02x",state[idx2][idx]);
-	printf("\n");
+			print_hexbyte(state[idx2][idx]);
+	print("\n");
 }
 
 // This prints the key (4 consecutive ints) used for a given round as a linear hex string.
@@ -1089,7 +1091,7 @@ void print_rnd_key(WORD key[])
 	int idx;
 
 	for (idx=0; idx < 4; idx++)
-		printf("%08x",key[idx]);
-	printf("\n");
+		print_hexbyte(key[idx]);
+	print("\n");
 }
-*/
+// */
