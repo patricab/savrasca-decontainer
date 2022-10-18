@@ -1,5 +1,5 @@
 NAME=aes
-ARCH=atmega328
+ARCH=atmega128
 # ARCH=atmega16
 # MCU=atmega163
 
@@ -14,9 +14,11 @@ ASFLAGS=-Wall -I. -O2
 #CFLAGS=-Wall -I. -O0 -mcall-prologues
 #ASFLAGS=-Wall -I. -O0 
 
-CSRC= \
-	main.c \
-	aes.c \
+# CSRC= \
+# 	main.c \
+# 	aes.c \
+
+CSRC = $(wildcard *.c)
 
 # SSRC= \
 # 	gf256mul.S \

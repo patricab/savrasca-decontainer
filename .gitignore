@@ -1,1 +1,7 @@
 app/
+*.bin
+*.elf
+*.hex
+*.map
+*.o
+.gdb-history

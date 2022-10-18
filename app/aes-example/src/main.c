@@ -1,25 +1,16 @@
 /**
- * NOTE: This file is based on the opn implementation
+ * NOTE: This file is based on the open implementation made by Brad Conte
  * https://github.com/B-Con/crypto-algorithms
  */
 
 /* Headers*/
+// #include <avr/signature.h>
 #include <stdio.h>
 #include <string.h>
 #include "aes.h"
-
-#define out (*( (volatile char *)0x20))
-#define in (*( (volatile char *)0x22))
+#include "print.h"
 
 /* Functions */
-// void print_hex(BYTE str[], int len)
-// {
-// 	int idx;
-
-// 	for(idx = 0; idx < len; idx++)
-// 		printf("%02x", str[idx]);
-// }
-
 int aes_cbc_test()
 {
 	WORD key_schedule[60];
@@ -39,29 +30,31 @@ int aes_cbc_test()
 	int pass = 1;
 
 	//printf("* CBC mode:\n");
-	aes_key_setup(key[0], key_schedule, 256);
+	aes_key_setup(key[0], key_schedule, 128);
 
-	//printf(  "Key          : ");
-	//print_hex(key[0], 32);
-	//printf("\nIV           : ");
-	//print_hex(iv[0], 16);
+	print("\nKey          : ");
+	print_hex(key[0], 32);
+	print("\nIV           : ");
+	print_hex(iv[0], 16);
 
-	aes_encrypt_cbc(plaintext[0], 32, enc_buf, key_schedule, 256, iv[0]);
-	//printf("\nPlaintext    : ");
-	//print_hex(plaintext[0], 32);
-	//printf("\n-encrypted to: ");
-	//print_hex(enc_buf, 32);
-	//printf("\nCiphertext   : ");
-	//print_hex(ciphertext[0], 32);
+	aes_encrypt_cbc(plaintext[0], 32, enc_buf, key_schedule, 128, iv[0]);
+	print("\n\nEncrypting...\n");
+	print("\nPlaintext    : ");
+	print_hex(plaintext[0], 32);
+	print("\n-encrypted to: ");
+	print_hex(enc_buf, 32);
+	print("\nCiphertext   : ");
+	print_hex(ciphertext[0], 32);
 	pass = pass && !memcmp(enc_buf, ciphertext[0], 32);
 
-	aes_decrypt_cbc(ciphertext[0], 32, enc_buf, key_schedule, 256, iv[0]);
-	//printf("\nCiphertext   : ");
-	//print_hex(ciphertext[0], 32);
-	//printf("\n-decrypted to: ");
-	//print_hex(enc_buf, 32);
-	//printf("\nPlaintext   : ");
-	//print_hex(plaintext[0], 32);
+	aes_decrypt_cbc(ciphertext[0], 32, enc_buf, key_schedule, 128, iv[0]);
+	print("\n\nDecrypting...\n");
+	print("\nCiphertext   : ");
+	print_hex(ciphertext[0], 32);
+	print("\n-decrypted to: ");
+	print_hex(enc_buf, 32);
+	print("\nPlaintext   : ");
+	print_hex(plaintext[0], 32);
 	pass = pass && !memcmp(enc_buf, plaintext[0], 32);
 
 	//printf("\n\n");
@@ -70,12 +63,11 @@ int aes_cbc_test()
 
 int main(int argc, char *argv[])
 {
-	out = "Hello world";
-	int pass = 1 && aes_cbc_test();
+	// print("\n\nHello world\n\n");
+	// int pass = 1 && aes_cbc_test();
 	// printf("AES Tests: %s\n", pass ? "SUCCEEDED" : "FAILED");
-	char *passStr = pass ? "SUCCEEDED" : "FAILED";
-	// printf("AES Tests: %s\n", pass ? "SUCCEEDED" : "FAILED");
-	// out = passStr;
+	char *passStr = aes_cbc_test() ? "\nSUCCEEDED\n\n" : "\nFAILED\n\n";
+	print(passStr);
 
 	return(0);
 }
