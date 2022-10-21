@@ -8,8 +8,10 @@ AS=avr-gcc -g -c -mmcu=$(ARCH) -x assembler-with-cpp -lm
 OBJCOPY=avr-objcopy
 SIZE=avr-size
 
-CFLAGS=-Wall -I. -O2 -mcall-prologues
-ASFLAGS=-Wall -I. -O2 
+# CFLAGS=-Wall -I. -O2 -mcall-prologues
+# CFLAGS=-Wall -I. -mcall-prologues
+CFLAGS=-Wall -I. -DF_CPU=4000000UL -Os -funsigned-char -funsigned-bitfields -fpack-struct -fshort-enums -Wall -Wstrict-prototypes 
+# ASFLAGS=-Wall -I. -O2 
 
 #CFLAGS=-Wall -I. -O0 -mcall-prologues
 #ASFLAGS=-Wall -I. -O0 

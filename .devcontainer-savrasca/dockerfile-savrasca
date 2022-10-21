@@ -28,6 +28,8 @@ autoreconf --install && \
 make && make check && sudo make install
 WORKDIR ${WORKDIR}/app
 
+COPY .gdbinit ${WORKDIR}/.gdbinit
+
 # [Optional] Uncomment this section to install additional OS packages.
 # RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
 #     && apt-get -y install --no-install-recommends <your-package-list-here>
