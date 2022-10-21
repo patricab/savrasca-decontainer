@@ -66,8 +66,12 @@ int main(int argc, char *argv[])
 	// print("\n\nHello world\n\n");
 	// int pass = 1 && aes_cbc_test();
 	// printf("AES Tests: %s\n", pass ? "SUCCEEDED" : "FAILED");
-	char *passStr = aes_cbc_test() ? "\nSUCCEEDED\n\n" : "\nFAILED\n\n";
-	print(passStr);
+	char *passStr;
+	// while (1)
+	// {
+		passStr = aes_cbc_test() ? "\nSUCCEEDED\n\n" : "\nFAILED\n\n";
+		print(passStr);
+	// }
 
 	return(0);
 }

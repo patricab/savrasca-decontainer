@@ -8,8 +8,9 @@ AS=avr-gcc -g -c -mmcu=$(ARCH) -x assembler-with-cpp -lm
 OBJCOPY=avr-objcopy
 SIZE=avr-size
 
-CFLAGS=-Wall -I. -O2 -mcall-prologues
-ASFLAGS=-Wall -I. -O2 
+# CFLAGS=-Wall -I. -O2 -mcall-prologues
+CFLAGS=-Wall -I. -mcall-prologues
+# ASFLAGS=-Wall -I. -O2 
 
 #CFLAGS=-Wall -I. -O0 -mcall-prologues
 #ASFLAGS=-Wall -I. -O0 

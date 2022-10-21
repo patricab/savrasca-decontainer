@@ -225,8 +225,9 @@ void xor_buf(const BYTE in[], BYTE out[], size_t len)
 {
 	size_t idx;
 
-	for (idx = 0; idx < len; idx++)
+	for (idx = 0; idx < len; idx++) {
 		out[idx] ^= in[idx];
+	}
 }
 
 /*******************
@@ -237,9 +238,10 @@ int aes_encrypt_cbc(const BYTE in[], size_t in_len, BYTE out[], const WORD key[]
 	BYTE buf_in[AES_BLOCK_SIZE], buf_out[AES_BLOCK_SIZE], iv_buf[AES_BLOCK_SIZE];
 	int blocks, idx;
 
-	if (in_len % AES_BLOCK_SIZE != 0)
-		print("\nError: bad input size");
+	if (in_len % AES_BLOCK_SIZE != 0) {
+		print("Error: bad input size");
 		return(FALSE);
+	}
 
 	blocks = in_len / AES_BLOCK_SIZE;
 
@@ -314,8 +316,9 @@ void increment_iv(BYTE iv[], int counter_size)
 	// Use counter_size bytes at the end of the IV as the big-endian integer to increment.
 	for (idx = AES_BLOCK_SIZE - 1; idx >= AES_BLOCK_SIZE - counter_size; idx--) {
 		iv[idx]++;
-		if (iv[idx] != 0 || idx == AES_BLOCK_SIZE - counter_size)
+		if (iv[idx] != 0 || idx == AES_BLOCK_SIZE - counter_size) {
 			break;
+		}
 	}
 }
 
@@ -557,9 +560,7 @@ WORD SubWord(WORD word)
 void aes_key_setup(const BYTE key[], WORD w[], int keysize)
 {
 	int Nb=4,Nr,Nk,idx;
-	WORD temp,Rcon[]={0x01000000,0x02000000,0x04000000,0x08000000,0x10000000,0x20000000,
-	                  0x40000000,0x80000000,0x1b000000,0x36000000,0x6c000000,0xd8000000,
-	                  0xab000000,0x4d000000,0x9a000000};
+	WORD temp,Rcon[]={0x01000000,0x02000000,0x04000000,0x08000000,0x10000000,0x20000000, 0x40000000,0x80000000,0x1b000000,0x36000000,0x6c000000,0xd8000000,0xab000000,0x4d000000,0x9a000000};
 
 	switch (keysize) {
 		case 128: Nr = 10; Nk = 4; break;
@@ -575,10 +576,12 @@ void aes_key_setup(const BYTE key[], WORD w[], int keysize)
 
 	for (idx = Nk; idx < Nb * (Nr+1); ++idx) {
 		temp = w[idx - 1];
-		if ((idx % Nk) == 0)
+		if ((idx % Nk) == 0) {
 			temp = SubWord(KE_ROTWORD(temp)) ^ Rcon[(idx-1)/Nk];
-		else if (Nk > 6 && (idx % Nk) == 4)
+		}
+		else if (Nk > 6 && (idx % Nk) == 4) {
 			temp = SubWord(temp);
+		}
 		w[idx] = w[idx-Nk] ^ temp;
 	}
 }
@@ -1079,9 +1082,11 @@ void print_state(BYTE state[][4])
 {
 	int idx,idx2;
 
-	for (idx=0; idx < 4; idx++)
-		for (idx2=0; idx2 < 4; idx2++)
+	for (idx=0; idx < 4; idx++) {
+		for (idx2=0; idx2 < 4; idx2++) {
 			print_hexbyte(state[idx2][idx]);
+		}
+	}
 	print("\n");
 }
 
@@ -1090,8 +1095,9 @@ void print_rnd_key(WORD key[])
 {
 	int idx;
 
-	for (idx=0; idx < 4; idx++)
+	for (idx=0; idx < 4; idx++) {
 		print_hexbyte(key[idx]);
+	}
 	print("\n");
 }
 // */
