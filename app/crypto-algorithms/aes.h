@@ -11,14 +11,13 @@
 
 /*************************** HEADER FILES ***************************/
 #include <stddef.h>
-#include <stdint.h>
 
 /****************************** MACROS ******************************/
 #define AES_BLOCK_SIZE 16               // AES operates on 16 bytes at a time
 
 /**************************** DATA TYPES ****************************/
-typedef uint8_t BYTE;            // 8-bit byte
-typedef uint32_t WORD;             // 32-bit word, change to "long" for 16-bit machines
+typedef unsigned char BYTE;            // 8-bit byte
+typedef unsigned int WORD;             // 32-bit word, change to "long" for 16-bit machines
 
 /*********************** FUNCTION DECLARATIONS **********************/
 ///////////////////
@@ -57,12 +56,6 @@ int aes_encrypt_cbc_mac(const BYTE in[],      // plaintext
                         int keysize,          // Bit length of the key, 128, 192, or 256
                         const BYTE iv[]);     // IV, must be AES_BLOCK_SIZE bytes long
 
-int aes_decrypt_cbc(const BYTE in[], 
-                    size_t in_len, BYTE out[], 
-                    const WORD key[], 
-                    int keysize, 
-                    const BYTE iv[]);
-                    
 ///////////////////
 // AES - CTR
 ///////////////////

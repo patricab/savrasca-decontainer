@@ -17,9 +17,8 @@
 
 /*************************** HEADER FILES ***************************/
 #include <stdlib.h>
-#include <string.h>
+#include <memory.h>
 #include "aes.h"
-#include "print.h"
 
 #include <stdio.h>
 
@@ -225,9 +224,8 @@ void xor_buf(const BYTE in[], BYTE out[], size_t len)
 {
 	size_t idx;
 
-	for (idx = 0; idx < len; idx++) {
+	for (idx = 0; idx < len; idx++)
 		out[idx] ^= in[idx];
-	}
 }
 
 /*******************
@@ -238,10 +236,8 @@ int aes_encrypt_cbc(const BYTE in[], size_t in_len, BYTE out[], const WORD key[]
 	BYTE buf_in[AES_BLOCK_SIZE], buf_out[AES_BLOCK_SIZE], iv_buf[AES_BLOCK_SIZE];
 	int blocks, idx;
 
-	if ((in_len % AES_BLOCK_SIZE) != 0) {
-		print("Error: bad input size");
+	if (in_len % AES_BLOCK_SIZE != 0)
 		return(FALSE);
-	}
 
 	blocks = in_len / AES_BLOCK_SIZE;
 
@@ -316,9 +312,8 @@ void increment_iv(BYTE iv[], int counter_size)
 	// Use counter_size bytes at the end of the IV as the big-endian integer to increment.
 	for (idx = AES_BLOCK_SIZE - 1; idx >= AES_BLOCK_SIZE - counter_size; idx--) {
 		iv[idx]++;
-		if (iv[idx] != 0 || idx == (AES_BLOCK_SIZE - counter_size)) {
+		if (iv[idx] != 0 || idx == AES_BLOCK_SIZE - counter_size)
 			break;
-		}
 	}
 }
 
@@ -545,12 +540,12 @@ void ccm_format_payload_data(BYTE buf[], int *end_of_buf, const BYTE payload[], 
 // Substitutes a word using the AES S-Box.
 WORD SubWord(WORD word)
 {
-	WORD result;
+	unsigned int result;
 
-	result = (WORD)aes_sbox[(word >> 4) & 0x0000000F][word & 0x0000000F];
-	result += (WORD)aes_sbox[(word >> 12) & 0x0000000F][(word >> 8) & 0x0000000F] << 8;
-	result += (WORD)aes_sbox[(word >> 20) & 0x0000000F][(word >> 16) & 0x0000000F] << 16;
-	result += (WORD)aes_sbox[(word >> 28) & 0x0000000F][(word >> 24) & 0x0000000F] << 24;
+	result = (int)aes_sbox[(word >> 4) & 0x0000000F][word & 0x0000000F];
+	result += (int)aes_sbox[(word >> 12) & 0x0000000F][(word >> 8) & 0x0000000F] << 8;
+	result += (int)aes_sbox[(word >> 20) & 0x0000000F][(word >> 16) & 0x0000000F] << 16;
+	result += (int)aes_sbox[(word >> 28) & 0x0000000F][(word >> 24) & 0x0000000F] << 24;
 	return(result);
 }
 
@@ -560,7 +555,9 @@ WORD SubWord(WORD word)
 void aes_key_setup(const BYTE key[], WORD w[], int keysize)
 {
 	int Nb=4,Nr,Nk,idx;
-	WORD temp,Rcon[]={0x01000000,0x02000000,0x04000000,0x08000000,0x10000000,0x20000000, 0x40000000,0x80000000,0x1b000000,0x36000000,0x6c000000,0xd8000000,0xab000000,0x4d000000,0x9a000000};
+	WORD temp,Rcon[]={0x01000000,0x02000000,0x04000000,0x08000000,0x10000000,0x20000000,
+	                  0x40000000,0x80000000,0x1b000000,0x36000000,0x6c000000,0xd8000000,
+	                  0xab000000,0x4d000000,0x9a000000};
 
 	switch (keysize) {
 		case 128: Nr = 10; Nk = 4; break;
@@ -574,14 +571,12 @@ void aes_key_setup(const BYTE key[], WORD w[], int keysize)
 				   ((key[4 * idx + 2]) << 8) | ((key[4 * idx + 3]));
 	}
 
-	for (idx = Nk; idx < (Nb * (Nr+1)); ++idx) {
+	for (idx = Nk; idx < Nb * (Nr+1); ++idx) {
 		temp = w[idx - 1];
-		if ((idx % Nk) == 0) {
+		if ((idx % Nk) == 0)
 			temp = SubWord(KE_ROTWORD(temp)) ^ Rcon[(idx-1)/Nk];
-		}
-		else if (Nk > 6 && (idx % Nk) == 4) {
+		else if (Nk > 6 && (idx % Nk) == 4)
 			temp = SubWord(temp);
-		}
 		w[idx] = w[idx-Nk] ^ temp;
 	}
 }
@@ -690,7 +685,7 @@ void InvSubBytes(BYTE state[][4])
 // Performs the ShiftRows step. All rows are shifted cylindrically to the left.
 void ShiftRows(BYTE state[][4])
 {
-	BYTE t;
+	int t;
 
 	// Shift left by 1
 	t = state[1][0];
@@ -716,7 +711,7 @@ void ShiftRows(BYTE state[][4])
 // All rows are shifted cylindrically to the right.
 void InvShiftRows(BYTE state[][4])
 {
-	BYTE t;
+	int t;
 
 	// Shift right by 1
 	t = state[1][3];
@@ -1076,18 +1071,16 @@ void aes_decrypt(const BYTE in[], BYTE out[], const WORD key[], int keysize)
 /*******************
 ** AES DEBUGGING FUNCTIONS
 *******************/
-// /*
+/*
 // This prints the "state" grid as a linear hex string.
 void print_state(BYTE state[][4])
 {
 	int idx,idx2;
 
-	for (idx=0; idx < 4; idx++) {
-		for (idx2=0; idx2 < 4; idx2++) {
-			print_hexbyte(state[idx2][idx]);
-		}
-	}
-	print("\n");
+	for (idx=0; idx < 4; idx++)
+		for (idx2=0; idx2 < 4; idx2++)
+			printf("%02x",state[idx2][idx]);
+	printf("\n");
 }
 
 // This prints the key (4 consecutive ints) used for a given round as a linear hex string.
@@ -1095,9 +1088,8 @@ void print_rnd_key(WORD key[])
 {
 	int idx;
 
-	for (idx=0; idx < 4; idx++) {
-		print_hexbyte(key[idx]);
-	}
-	print("\n");
+	for (idx=0; idx < 4; idx++)
+		printf("%08x",key[idx]);
+	printf("\n");
 }
-// */
+*/
