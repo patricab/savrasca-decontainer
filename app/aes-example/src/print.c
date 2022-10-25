@@ -1,8 +1,8 @@
 #include "aes.h"
 #include "print.h"
 
-#define outport (*( (volatile char *)0x20))
-#define inpport  (*( (volatile char *)0x22))
+// #define outport (*( (volatile char *)0x20))
+// #define inpport  (*( (volatile char *)0x22))
 
 void print_hexbyte(unsigned char byte)
 {

@@ -1,6 +1,9 @@
 #ifndef PRINT_H
 #define PRINT_H
 
+#define outport (*( (volatile char *)0x20))
+#define inport  (*( (volatile char *)0x22))
+
 /**
  * @brief Print array of hex bytes to output
  * 

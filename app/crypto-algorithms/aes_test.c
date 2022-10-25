@@ -336,7 +336,7 @@ int aes_test()
 int main(int argc, char *argv[])
 {
 	// printf("AES Tests: %s\n", aes_test() ? "SUCCEEDED" : "FAILED");
-	printf("AES Tests: %s\n", cbc_128() ? "SUCCEEDED" : "FAILED");
+	printf("AES Tests: %s\n", cbc_128() ? "SUCCEEDED\n" : "FAILED\n");
 
 	return(0);
 }
