@@ -570,8 +570,7 @@ void aes_key_setup(const BYTE key[], WORD w[], int keysize)
 	}
 
 	for (idx=0; idx < Nk; ++idx) {
-		w[idx] = ((key[4 * idx]) << 24) | ((key[4 * idx + 1]) << 16) |
-				   ((key[4 * idx + 2]) << 8) | ((key[4 * idx + 3]));
+		w[idx] = ((key[4 * idx]) << 24) | ((key[4 * idx + 1]) << 16) | ((key[4 * idx + 2]) << 8) | ((key[4 * idx + 3]));
 	}
 
 	for (idx = Nk; idx < (Nb * (Nr+1)); ++idx) {
