@@ -1,6 +1,4 @@
 #!/usr/bin/env python
-import sys
-import random
 
 """
 * Send random plaintext as input to AES function (main.c)
@@ -13,26 +11,34 @@ for the DPA Contest v4 input
 """
 
 #%% Generate random plaintext
+import sys
+import random
+import numpy as np
 rndSeed = 0 # default random seed
-if (len(sys.argv) > 1):
-	rndSeed = int(sys.argv[1]) # choose random seed from command line
+
+# if (len(sys.argv) > 1):
+# 	rndSeed = int(sys.argv[1]) # choose random seed from command line
 
 # file = open("inputs.csv", 'a')	# the file that will contain plaintexts and rnd inputs
-with open("")
-random.seed(rndSeed) # set random seed
+plaintext = np.zeros([16])
+with open("inputs.csv", "wb") as file:
+	random.seed(rndSeed) # set random seed
 
-# plaintext
-for j in range(16):
-	byte = random.randint(0,255)
-	print(chr(byte))
-	file.write("%d;"% (byte))
+	# plaintext
+	for i in range(2):
+		for j in range(16):
+			byte = random.randint(0,255)
+			print(chr(byte))
+			plaintext[j] = byte
 
-print() # endline
+		np.save(file, plaintext)
 
-# # maskoffset
-# byte_offset = random.randint(0,15)
-# print(chr(byte_offset))
-# file.write( "%d;"% (byte_offset) )
-# file.write("\n")
+	print() # endline
+	# np.savetxt(file, plaintext, fmt="%x")
 
-file.close()
+	file.close()
+
+# with open("inputs.csv", "rb") as file:
+# 	n = [np.load(file), np.load(file)]
+# 	print(n)
+# 	file.close()

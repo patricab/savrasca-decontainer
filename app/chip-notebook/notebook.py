@@ -20,12 +20,12 @@ trace = np.array(trace)
 import matplotlib.pyplot as plt
 import numpy as np
 import scipy.signal as sig
-q = 100
+# q = 100
 
 # n = np.linspace(0, len(trace), len(trace))
 n = np.linspace(0, len(trace), len(trace))
-n = sig.decimate(n, q)
-trace = sig.decimate(trace, q)
+# n = sig.decimate(n, q)
+# trace = sig.decimate(trace, q)
 plt.plot(n, trace)
 plt.show()
 
