@@ -34,9 +34,11 @@ fi
 
 # repeat simulation by calling python script
 # for (( i=0; i<10; i++ ))
+# i = 0
 # do
-    # python3 generateInputs.py $i | $SIMPATH -t traces_exe/trace_exe_`printf "%05d" $i` -P traces/trace`printf "%05d" $i` -d $ARCH -f $file -W 0x20,- -R 0x22,- -T exit
-    $SIMPATH -t traces_exe/trace_exe_`printf "%05d" $i` -P traces/trace`printf "%05d" $i` -d $ARCH -f $file -W 0x20,- -R 0x22,- -T exit
+    python3 generateInputs.py | $SIMPATH -t traces_exe/trace_exe_`printf "%05d" $i` -P traces/trace`printf "%05d" $i` -d $ARCH -f $file -W 0x20,- -R 0x22,- -T exit
+	python3 parseTrace.py
+    # $SIMPATH -t traces_exe/trace_exe_`printf "%05d" $i` -P traces/trace`printf "%05d" $i` -d $ARCH -f $file -W 0x20,- -R 0x22,- -T exit
     # $SIMPATH -g -t traces_exe/trace_exe_`printf "%05d" $i` -P traces/trace`printf "%05d" $i` -d $ARCH -f $file -W 0x20,- -R 0x22,- -T exit
     
 # done;

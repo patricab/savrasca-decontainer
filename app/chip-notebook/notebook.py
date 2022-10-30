@@ -3,29 +3,27 @@ import chipwhisperer.analyzer as cwa
 import numpy as np
 # print("Hello world")
 
-trace = []
-with open("../aes-example/traces/trace00000", "rb") as f:
+with open("../aes-example/trace.npy", "rb") as f:
 
     # lines = f.readlines()
     # for line in lines:
     #     print(line.rstrip())
     
-    while f.read(1):
-        trace.append(int.from_bytes(f.read(1), "little"))
+    trace = np.load(f, allow_pickle=True)
         # print(f.read(1))
 
-trace = np.array(trace)
+f.close()
 
 # %% Plot trace data
 import matplotlib.pyplot as plt
 import numpy as np
 import scipy.signal as sig
-# q = 100
+q = 10
 
 # n = np.linspace(0, len(trace), len(trace))
-n = np.linspace(0, len(trace), len(trace))
-# n = sig.decimate(n, q)
-# trace = sig.decimate(trace, q)
+n = np.linspace(0, len(trace[0][1]), len(trace[0][1]))
+n = sig.decimate(n, q)
+trace = sig.decimate(trace[0][1], q)
 plt.plot(n, trace)
 plt.show()
 
@@ -57,20 +55,52 @@ sbox=(
 def intermediate(input, keyguess):
     return sbox[input ^ keyguess]
 
-# traces = np.load(r'C:\chipwhisperer\software\chipwhisperer\capture\default-data-dir\traces\2013.11.18-16.40.58_traces.npy')
-# pt = np.load(r'C:\chipwhisperer\software\chipwhisperer\capture\default-data-dir\traces\2013.11.18-16.40.58_textin.npy')
-# input = 
 
 numtraces = np.shape(trace)[0]
-numpoint = np.shape(trace)[1]
+numpoint = np.shape(trace[0][1])[0]
 
 #Use less than the maximum traces by setting numtraces to something
 #numtraces = 15
 
-for bnum in range(0, 16):
-    # cpaoutput = [0]*256
+# Loop through keyspace
+bestguess = [0]*16 
+for pnum in range(0, 16):
+    cpaoutput = [0]*256
+    maxcpa = [0]*256
+    
     for kguess in range(0, 256):
-        print("Subkey %d, hyp = %02x", bnum, kguess)
+        print("Subkey %d, hyp = %02x", pnum, kguess)
+
+        #Initialize arrays & variables to zero
+        sumnum = np.zeros(numpoint)
+        sumden1 = np.zeros(numpoint)
+        sumden2 = np.zeros(numpoint)
+        hyp = np.zeros(numtraces)
 
         for tnum in range(0, numtraces):
-            hypint = HW[intermediate(pt[tnum][bnum], kguess)]
+            hypint = HW[intermediate(int(trace[tnum][0][pnum]), kguess)]
+
+        # Mean of hypothesis
+        meanh = np.mean(hyp, dtype=np.float64)
+
+        # Mean of all points in trace
+        meant = np.mean(trace[:, 1], axis=0, dtype=np.float64)
+
+        # For each trace, do the following
+        for tnum in range(0, numtraces):
+            hdiff = (hyp[tnum] - meanh)
+            tdiff = traces[tnum, :] - meant
+
+            sumnum = sumnum + (hdiff*tdiff)
+            sumden1 = sumden1 + hdiff*hdiff 
+            sumden2 = sumden2 + tdiff*tdiff
+
+        cpaoutput[kguess] = sumnum / np.sqrt( sumden1 * sumden2 )
+        maxcpa[kguess] = max(abs(cpaoutput[kguess]))
+
+        print(maxcpa[kguess])
+
+    bestguess[bnum] = np.argmax(maxcpa)
+
+print "Best Key Guess: "
+for b in bestguess: print "%02x "%b,

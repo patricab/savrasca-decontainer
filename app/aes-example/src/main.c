@@ -14,11 +14,9 @@
 int cbc_128(BYTE plaintext[1][16])
 {
 	WORD key_schedule[60];
-	BYTE enc_buf[128];
+	BYTE enc_buf[16];
+	BYTE dec_buf[16];
 
-	// BYTE plaintext[1][16] = {
-	// 	{0x6b, 0xc1, 0xbe, 0xe2, 0x2e, 0x40, 0x9f, 0x96, 0xe9, 0x3d, 0x7e, 0x11, 0x73, 0x93, 0x17, 0x2a}
-	// };
 	BYTE ciphertext[1][16] = {
 		{0x76, 0x49, 0xab, 0xac, 0x81, 0x19, 0xb2, 0x46, 0xce, 0xe9, 0x8e, 0x9b, 0x12, 0xe9, 0x19, 0x7d}
 	};
@@ -44,19 +42,21 @@ int cbc_128(BYTE plaintext[1][16])
 	print_hex(plaintext[0], 16);
 	print("\n-encrypted to: ");
 	print_hex(enc_buf, 16);
-	print("\nCiphertext   : ");
-	print_hex(ciphertext[0], 16);
-	pass = pass && !memcmp(enc_buf, ciphertext[0], 16);
+	// print("\nCiphertext   : ");
+	// print_hex(ciphertext[0], 16);
+	// pass = pass && !memcmp(enc_buf, ciphertext[0], 16);
 
-	aes_decrypt_cbc(ciphertext[0], 16, enc_buf, key_schedule, 128, iv[0]);
+	memcpy(dec_buf, enc_buf, 16);
+	aes_decrypt_cbc(enc_buf, 16, dec_buf, key_schedule, 128, iv[0]);
 	// print("\n\nDecrypting...\n");
 	print("\n\nCiphertext   : ");
-	print_hex(ciphertext[0], 16);
-	print("\n-decrypted to: ");
+	// print_hex(ciphertext[0], 16);
 	print_hex(enc_buf, 16);
+	print("\n-decrypted to: ");
+	print_hex(dec_buf, 16);
 	print("\nPlaintext   : ");
 	print_hex(plaintext[0], 16);
-	pass = pass && !memcmp(enc_buf, plaintext[0], 16);
+	pass = pass && !memcmp(dec_buf, plaintext[0], 16);
 
 	//printf("\n\n");
 	return(pass);
@@ -65,7 +65,7 @@ int cbc_128(BYTE plaintext[1][16])
 int cbc_256()
 {
 	WORD key_schedule[60];
-	BYTE enc_buf[128];
+	BYTE enc_buf[32];
 	BYTE plaintext[1][32] = {
 		{0x6b,0xc1,0xbe,0xe2,0x2e,0x40,0x9f,0x96,0xe9,0x3d,0x7e,0x11,0x73,0x93,0x17,0x2a,0xae,0x2d,0x8a,0x57,0x1e,0x03,0xac,0x9c,0x9e,0xb7,0x6f,0xac,0x45,0xaf,0x8e,0x51}
 	};
@@ -123,8 +123,11 @@ void read16(BYTE *res){
 int main(int argc, char *argv[])
 {
 	char *passStr;
+
 	BYTE plaintext[1][16];
 	read16(plaintext);
+	// BYTE plaintext[1][16] = {
+	// 	{0x6b, 0xc1, 0xbe, 0xe2, 0x2e, 0x40, 0x9f, 0x96, 0xe9, 0x3d, 0x7e, 0x11, 0x73, 0x93, 0x17, 0x2a}};
 	// while (1)
 	// {
 		// passStr = cbc_256() ? "\nSUCCEEDED\n\n" : "\nFAILED\n\n";
