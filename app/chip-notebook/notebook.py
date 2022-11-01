@@ -4,13 +4,7 @@ import numpy as np
 # print("Hello world")
 
 with open("../aes-example/trace.npy", "rb") as f:
-
-    # lines = f.readlines()
-    # for line in lines:
-    #     print(line.rstrip())
-    
     trace = np.load(f, allow_pickle=True)
-        # print(f.read(1))
 
 f.close()
 
@@ -55,11 +49,15 @@ sbox=(
 def intermediate(input, keyguess):
     return sbox[input ^ keyguess]
 
+"""
+trace:
+[tracenum, [input, trace]]
+"""
 
 numtraces = np.shape(trace)[0]
 numpoint = np.shape(trace[0][1])[0]
 
-#Use less than the maximum traces by setting numtraces to something
+# Use less than the maximum traces by setting numtraces to something
 #numtraces = 15
 
 # Loop through keyspace
@@ -69,38 +67,45 @@ for pnum in range(0, 16):
     maxcpa = [0]*256
     
     for kguess in range(0, 256):
-        print("Subkey %d, hyp = %02x", pnum, kguess)
+        print("Subkey ", pnum, "hyp = ", hex(kguess))
 
-        #Initialize arrays & variables to zero
+        """
+        [Pearson sample]
+        sumnum / sqrt(sumden1 + sumden2)
+        """
         sumnum = np.zeros(numpoint)
         sumden1 = np.zeros(numpoint)
         sumden2 = np.zeros(numpoint)
-        hyp = np.zeros(numtraces)
+        hyp = np.zeros(numtraces) # Hypothetical values
 
         for tnum in range(0, numtraces):
-            hypint = HW[intermediate(int(trace[tnum][0][pnum]), kguess)]
+            hyp[tnum] = HW[intermediate(int(trace[tnum][0][pnum]), kguess)]
 
         # Mean of hypothesis
         meanh = np.mean(hyp, dtype=np.float64)
 
         # Mean of all points in trace
-        meant = np.mean(trace[:, 1], axis=0, dtype=np.float64)
+        # TODO: this might get quite messy! change this to a for loop
+        # and iterate over each sublist
+        flat = [item for sublist in trace[:, 1] for item in sublist]
+        meant = np.mean(flat, axis=0, dtype=np.float64)
 
         # For each trace, do the following
         for tnum in range(0, numtraces):
             hdiff = (hyp[tnum] - meanh)
-            tdiff = traces[tnum, :] - meant
+            # tdiff = traces[tnum:] - meant
+            tdiff = flat - meant
 
             sumnum = sumnum + (hdiff*tdiff)
             sumden1 = sumden1 + hdiff*hdiff 
             sumden2 = sumden2 + tdiff*tdiff
 
-        cpaoutput[kguess] = sumnum / np.sqrt( sumden1 * sumden2 )
+        cpaoutput[kguess] = sumnum / np.sqrt(sumden1 * sumden2)
         maxcpa[kguess] = max(abs(cpaoutput[kguess]))
 
         print(maxcpa[kguess])
 
-    bestguess[bnum] = np.argmax(maxcpa)
+    bestguess[pnum] = np.argmax(maxcpa)
 
-print "Best Key Guess: "
-for b in bestguess: print "%02x "%b,
+print("Best Key Guess: ")
+for b in bestguess: print(hex(b)),
