@@ -8,6 +8,21 @@ with open("../aes-example/trace.npy", "rb") as f:
 
 f.close()
 
+#%% 
+x = np.array([1, 2])
+y = np.array([2, 3])
+
+with open("test", "wb") as wf:
+    np.savetxt(wf, x)
+    np.savetxt(wf, y)
+    wf.close()
+# with open("test", "wb") as wf:
+#     wf.close()
+
+with open("test", "rb") as rf:
+    print(np.loadtxt(rf))
+    rf.close
+
 # %% Plot trace data
 import matplotlib.pyplot as plt
 import numpy as np
@@ -17,8 +32,7 @@ q = 10
 # n = np.linspace(0, len(trace), len(trace))
 n = np.linspace(0, len(trace[0][1]), len(trace[0][1]))
 n = sig.decimate(n, q)
-trace = sig.decimate(trace[0][1], q)
-plt.plot(n, trace)
+plt.plot(n, sig.decimate(trace[0][1], q))
 plt.show()
 
 #%% Run key guess
@@ -93,8 +107,7 @@ for pnum in range(0, 16):
         # For each trace, do the following
         for tnum in range(0, numtraces):
             hdiff = (hyp[tnum] - meanh)
-            # tdiff = traces[tnum:] - meant
-            tdiff = flat - meant
+            tdiff = trace[tnum][1] - meant
 
             sumnum = sumnum + (hdiff*tdiff)
             sumden1 = sumden1 + hdiff*hdiff 
