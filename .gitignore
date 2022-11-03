@@ -1,4 +1,5 @@
-app/
+app/aes_example/traces/
+app/aes_example/traces_exe/
 *.bin
 *.elf
 *.hex

@@ -1,39 +1,25 @@
-#%% Read from trace file, append to array
-import chipwhisperer.analyzer as cwa
-import numpy as np
-# print("Hello world")
+# %% Plot trace data
+# import matplotlib.pyplot as plt
+# import numpy as np
+# import scipy.signal as sig
+# q = 10
 
-with open("../aes-example/trace.npy", "rb") as f:
+# # n = np.linspace(0, len(trace), len(trace))
+# n = np.linspace(0, len(trace[0][1]), len(trace[0][1]))
+# n = sig.decimate(n, q)
+# plt.plot(n, sig.decimate(trace[0][1], q))
+# plt.show()
+
+#%% Read from trace file, append to array
+# import chipwhisperer.analyzer as cwa
+import numpy as np
+
+key = np.array([0x2b, 0x7e, 0x15, 0x16, 0x28, 0xae, 0xd2, 0xa6, 0xab, 0xf7, 0x15, 0x88, 0x09, 0xcf, 0x4f, 0x3c])
+
+with open("trace.npy", "rb") as f:
     trace = np.load(f, allow_pickle=True)
 
 f.close()
-
-#%% 
-x = np.array([1, 2])
-y = np.array([2, 3])
-
-with open("test", "wb") as wf:
-    np.savetxt(wf, x)
-    np.savetxt(wf, y)
-    wf.close()
-# with open("test", "wb") as wf:
-#     wf.close()
-
-with open("test", "rb") as rf:
-    print(np.loadtxt(rf))
-    rf.close
-
-# %% Plot trace data
-import matplotlib.pyplot as plt
-import numpy as np
-import scipy.signal as sig
-q = 10
-
-# n = np.linspace(0, len(trace), len(trace))
-n = np.linspace(0, len(trace[0][1]), len(trace[0][1]))
-n = sig.decimate(n, q)
-plt.plot(n, sig.decimate(trace[0][1], q))
-plt.show()
 
 #%% Run key guess
 import numpy as np
@@ -73,10 +59,12 @@ numpoint = np.shape(trace[0][1])[0]
 
 # Use less than the maximum traces by setting numtraces to something
 #numtraces = 15
+# numguess = 16
+numguess = 1
 
 # Loop through keyspace
-bestguess = [0]*16 
-for pnum in range(0, 16):
+bestguess = [0]*numguess
+for pnum in range(0, numguess):
     cpaoutput = [0]*256
     maxcpa = [0]*256
     
@@ -121,4 +109,11 @@ for pnum in range(0, 16):
     bestguess[pnum] = np.argmax(maxcpa)
 
 print("Best Key Guess: ")
-for b in bestguess: print(hex(b)),
+for b in bestguess[0:numguess]: print(hex(b), end=" ")
+for k in key[0:numguess]: print(hex(k), end=" ")
+
+# Check key match
+if (np.array(bestguess[0:numguess]) == key[0:numguess]).all(): 
+     print("\nKey match") 
+else: 
+    print("\nKey fail")
