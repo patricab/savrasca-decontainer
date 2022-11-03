@@ -66,4 +66,4 @@ clean: clean-$(NAME)
 
 clean-$(NAME):
 	# rm -rf $(OBJ) $(NAME) $(NAME).bin $(NAME).hex $(NAME).map $(NAME).elf ../inputs.csv ../traces ../traces_exe ../trace.npy
-	rm -rf $(OBJ) $(NAME) $(NAME).bin $(NAME).hex $(NAME).map $(NAME).elf  ../traces ../traces_exe ../trace.npy
+	rm -rf $(OBJ) $(NAME) $(NAME).bin $(NAME).hex $(NAME).map $(NAME).elf  ../traces ../traces_exe ../trace.npy ../inputs.csv
