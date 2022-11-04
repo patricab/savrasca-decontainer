@@ -26,7 +26,7 @@ numguess=10
 
 for ((i=0; i < numguess; i++))
 do
-    python3 generateInputs.py $i | $SIMPATH -t traces_exe/trace_exe_`printf "%05d" $i` -P traces/trace`printf "%05d" $i` -d $ARCH -f $file -W 0x20,- -R 0x22,- -T exit
+    python3 generateInputs.py $i | $SIMPATH -t traces_exe/trace_exe_`printf "%05d" $i` -P traces/trace`printf "%05d" $i` -d $ARCH -f $file -W 0x20,- -R 0x22,- -T exit >> output.txt
     # $SIMPATH -t traces_exe/trace_exe_`printf "%05d" $i` -P traces/trace`printf "%05d" $i` -d $ARCH -f $file -W 0x20,- -R 0x22,- -T exit
     # $SIMPATH -g -t traces_exe/trace_exe_`printf "%05d" $i` -P traces/trace`printf "%05d" $i` -d $ARCH -f $file -W 0x20,- -R 0x22,- -T exit
 done;

@@ -24,6 +24,7 @@ with open("inputs.csv", "ab") as file:
 		print(chr(byte))
 		plaintext[j] = byte
 
+	# Save to inputfile
 	np.savetxt(file, plaintext)
 
 	print() # endline
