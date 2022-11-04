@@ -68,7 +68,8 @@ for pnum in range(0, numguess):
     cpaoutput = [0]*256
     maxcpa = [0]*256
     
-    for kguess in range(0, 256):
+    # for kguess in range(0, 256):
+    for kguess in range(0x20, 0x2f):
         print("Subkey ", pnum, "hyp = ", hex(kguess))
 
         """
@@ -80,10 +81,11 @@ for pnum in range(0, numguess):
         sumden2 = np.zeros(numpoint)
         hyp = np.zeros(numtraces) # Hypothetical values
 
+        # Generate intermediate values for key position in every trace
         for tnum in range(0, numtraces):
             hyp[tnum] = HW[intermediate(int(trace[tnum][0][pnum]), kguess)]
 
-        # Mean of hypothesis
+        # Mean of hypothetical array
         meanh = np.mean(hyp, dtype=np.float64)
 
         # Mean of all points in trace
@@ -108,8 +110,10 @@ for pnum in range(0, numguess):
 
     bestguess[pnum] = np.argmax(maxcpa)
 
+print("Confidence in correct guess: ", maxcpa[0x2b])
 print("Best Key Guess: ")
 for b in bestguess[0:numguess]: print(hex(b), end=" ")
+print("Confidence in best guess: ", maxcpa[bestguess[0]])
 for k in key[0:numguess]: print(hex(k), end=" ")
 
 # Check key match
