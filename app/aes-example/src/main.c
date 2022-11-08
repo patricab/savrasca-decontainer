@@ -31,32 +31,32 @@ int cbc_128(BYTE plaintext[1][16])
 	//printf("* CBC mode:\n");
 	aes_key_setup(key[0], key_schedule, 128);
 
-	print("\nKey          : ");
-	print_hex(key[0], 16);
-	print("\nIV           : ");
-	print_hex(iv[0], 16);
+	// print("\nKey          : ");
+	// print_hex(key[0], 16);
+	// print("\nIV           : ");
+	// print_hex(iv[0], 16);
 
 	aes_encrypt_cbc(plaintext[0], 16, enc_buf, key_schedule, 128, iv[0]);
-	// print("\n\nEncrypting...\n");
-	print("\n\nPlaintext    : ");
-	print_hex(plaintext[0], 16);
-	print("\n-encrypted to: ");
-	print_hex(enc_buf, 16);
-	// print("\nCiphertext   : ");
-	// print_hex(ciphertext[0], 16);
-	// pass = pass && !memcmp(enc_buf, ciphertext[0], 16);
+	// print("\n\nPlaintext    : ");
+	// print_hex(plaintext[0], 16);
+	// print("\n-encrypted to: ");
+	// print_hex(enc_buf, 16);
 
 	memcpy(dec_buf, enc_buf, 16);
 	aes_decrypt_cbc(enc_buf, 16, dec_buf, key_schedule, 128, iv[0]);
-	// print("\n\nDecrypting...\n");
-	print("\n\nCiphertext   : ");
-	// print_hex(ciphertext[0], 16);
-	print_hex(enc_buf, 16);
-	print("\n-decrypted to: ");
-	print_hex(dec_buf, 16);
-	print("\nPlaintext   : ");
-	print_hex(plaintext[0], 16);
+	// print("\n\nCiphertext   : ");
+	// print_hex(enc_buf, 16);
+	// print("\n-decrypted to: ");
+	// print_hex(dec_buf, 16);
+	// print("\nPlaintext   : ");
+	// print_hex(plaintext[0], 16);
 	pass = pass && !memcmp(dec_buf, plaintext[0], 16);
+	if (pass)
+	{
+		print("Key ");
+		print_hex(enc_buf, 16);
+	}
+	
 
 	//printf("\n\n");
 	return(pass);
