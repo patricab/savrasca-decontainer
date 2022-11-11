@@ -1,15 +1,15 @@
 version: "0.1.0"
 services:
-  savrasca:
-    container_name: savrasca
-    build:
-      context: .devcontainer-savrasca/
-      dockerfile: dockerfile-savrasca
-    volumes: 
-      - savrasca:/home/vscode
-      - ./app:/home/vscode/app
-      - ~/.ssh/:/home/vscode/.ssh
-    command: /bin/bash -c "while sleep 1000; do :; done"
+#  savrasca:
+#    container_name: savrasca
+#    build:
+#      context: .devcontainer-savrasca/
+#      dockerfile: dockerfile-savrasca
+#    volumes: 
+#      - savrasca:/home/vscode
+#      - ./app:/home/vscode/app
+#      - ~/.ssh/:/home/vscode/.ssh
+#    command: /bin/bash -c "while sleep 1000; do :; done"
 
   chipwhisperer:
     container_name: chipwhisperer
@@ -24,8 +24,11 @@ services:
       - /tmp/.X11-unix:/tmp/.X11-unix
       - ./app:/home/vscode/app
       - ~/.ssh/:/home/vscode/.ssh
+      - /dev:/dev
+    device_cgroup_rules:
+     - 'c *:* rmw'
     command: /bin/bash -c "while sleep 1000; do :; done"
 
 volumes:
-  savrasca:
+#  savrasca:
   chipwhisperer:
