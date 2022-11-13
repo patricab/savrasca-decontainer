@@ -24,6 +24,8 @@ void print_hexbyte(unsigned char byte);
  * @return byte Input hex array
  */
 // BYTE *get_input(void);
-void get_input(BYTE input[1][16]);
+// void get_input(BYTE input[1][16]);
+
+void putch(char data);
 
 #endif

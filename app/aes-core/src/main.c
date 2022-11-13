@@ -7,11 +7,12 @@
 #include <stdio.h>
 // #include <string.h>
 #include "aes.h"
-#include <print.h>
+#include "print.h"
 #include <xc.h>
 
 #define F_CPU 20000000UL
 #include <util/delay.h>
+
 
 /* Functions */
 int cbc_128(BYTE plaintext[1][16])
@@ -59,21 +60,22 @@ int cbc_128(BYTE plaintext[1][16])
 int main(int argc, char *argv[])
 {
     SYSTEM_Initialize();
-	// char *passStr;
+	USART3_Enable();
+	char *passStr;
 
 	// BYTE plaintext[1][16];
 	// read16(plaintext);
 	// BYTE plaintext[1][16] = {
 	// 	{0x6b, 0xc1, 0xbe, 0xe2, 0x2e, 0x40, 0x9f, 0x96, 0xe9, 0x3d, 0x7e, 0x11, 0x73, 0x93, 0x17, 0x2a}};
+		// 6bc1bee22e409f96e93d7e117393172a
 
-	BYTE plaintext[1][16];
-
+	BYTE plaintext[1][16] = {0};
+    // unsigned char c;
     while (1) {
 		get_input(plaintext);
-		print_hex(plaintext, 16);
-        // passStr = cbc_128(plaintext) ? "\nSUCCEEDED\n\n" : "\nFAILED\n\n";
+        passStr = cbc_128(plaintext) ? "\nSUCCEEDED\n\n" : "\nFAILED\n\n";
         // printf(passStr);
-        _delay_ms(1000);
+        // _delay_ms(1000);
     }
 	
     return 0;
