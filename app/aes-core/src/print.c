@@ -8,24 +8,28 @@ void putch(char data) {
 
 void print_hexbyte(unsigned char byte)
 {
-	if((byte >>4)<10 ){
-		printf((byte>>4)+'0');
+	if((byte >> 4) < 10){
+		// printf("Test1\n");
+		printf("%c", (byte>>4)+'0');
 	}else{
-		printf((byte>>4)-10+'A');
+		// printf("Test2\n");
+		printf("%c", (byte>>4)-10+'A');
 	}
 	
 	if((byte & 0xF)<10 ){
-		printf((byte& 0xF)+'0');
+		// printf("Test3\n");
+		printf("%c", (byte& 0xF)+'0');
 	}else{
-		printf((byte& 0xF)-10+'A');
+		// printf("Test4\n");
+		printf("%c", (byte& 0xF)-10+'A');
 	}
 }
 
 void print_hex(BYTE str[], int len)
 {
 	for(int idx = 0; idx < len; idx++) {
-		//print_hexbyte(str[idx]);
-        printf("%02x", str[idx]);
+		print_hexbyte(str[idx]);
+        // printf("%02x", str[idx]);
 	}
 	printf("\n");
 }
@@ -33,16 +37,18 @@ void print_hex(BYTE str[], int len)
 void get_input(BYTE input[1][16])
 {
 	uint8_t i = 0;
-
 	unsigned char c;
-	while (c != "\n" && c != "\r") {
-		input[0][i++] = c; // Append to input array
+
+	while (1) {
+		c = USART3_Read();
+		input[0][i] = c; // Append to input array
+		i++;
 
 		/* Reset index */
 		if (i >= 16) {
 			i = 0;
+            // print_hex(input, 16);
+			break;
 		}
 	}
-
-	return input;
 }
